@@ -52,8 +52,16 @@
     width: 70px;
     height: auto;
     margin-bottom: 15px;
+    border-radius: 50%;
 }
-
+@media (max-width: 500px) {
+          .login-container {
+            padding: 30px 20px;
+          }
+          .login-header h2 {
+            font-size: 22px;
+          }
+        }
 .login-header h2 {
     font-size: 26px;
     font-weight: 600;
@@ -164,3 +172,45 @@
 .login-footer a:hover {
     text-decoration: underline;
 }
+.modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+        }
+
+.modal-content {
+          background-color: #fff;
+          padding: 30px;
+          border-radius: 12px;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+          text-align: center;
+          max-width: 350px;
+          width: 100%;
+        }
+
+.modal-content p {
+          margin-bottom: 20px;
+          font-size: 16px;
+          color: #333;
+        }
+
+.modal-content button {
+          background-color: #4CAF50;
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+
+.modal-content button:hover {
+          background-color: #388e3c;
+        }
