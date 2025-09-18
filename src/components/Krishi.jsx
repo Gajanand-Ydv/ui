@@ -8,6 +8,7 @@ import '../Features/Theme.css'
 import logoImage from '../assets/logo.png';
 import { useClerk, UserButton, useUser } from '@clerk/clerk-react';
 import ThemeButton from '../Features/themeButton.jsx';
+import ChatbotButton from '../Features/ChatbotButton'; // Your import is correct
 
 
 const initialSchemes = [
@@ -112,8 +113,7 @@ const KrishiSahayak = () => {
                 carousel.removeEventListener('mousemove', handleMouseMove);
             };
         }
-        // Add dependencies to the useEffect dependency array
-    }, [isLoading]); // Rerun effect if isLoading changes to re-evaluate listeners if needed
+    }, [isLoading]); 
 
     const services = [
         { icon: 'cpu', title: 'AI Crop Prediction', description: 'Get accurate crop yield predictions using our advanced AI models tailored to your farm\'s conditions.' },
@@ -189,10 +189,8 @@ const KrishiSahayak = () => {
                     <h2 className="section-title" data-aos="fade-up">Government Schemes & Insights</h2>
                     <div className="carousel-wrapper">
                         <div className="carousel" ref={schemesCarouselRef}>
-                            {/* --- MAPPING OVER THE SCHEMES STATE VARIABLE --- */}
                             {schemes.map((scheme, index) => (
-                                // --- UPDATED UNIQUE KEY ---
-                                <div  className="scheme-card" data-aos="fade-right" data-aos-delay={index * 100}>
+                                <div key={`${scheme.tag}-${index}`} className="scheme-card" data-aos="fade-right" data-aos-delay={index * 100}>
                                     <div className="scheme-header">
                                         <div className="scheme-icon-wrapper">
                                             <i data-feather={scheme.logoIcon} className="scheme-icon"></i>
@@ -206,8 +204,6 @@ const KrishiSahayak = () => {
                                     </button>
                                 </div>
                             ))}
-
-                            {/* --- LOADING INDICATOR --- */}
                             {isLoading && (
                                 <div className="scheme-card loading-indicator">
                                     <p>Loading More Schemes...</p>
@@ -295,6 +291,9 @@ const KrishiSahayak = () => {
                     </div>
                 </div>
             </footer>
+            
+            {/* --- CHATBOT BUTTON ADDED HERE --- */}
+            <ChatbotButton />
         </div>
     );
 };

@@ -1,7 +1,8 @@
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import KrishiSahayak from './components/Krishi';
-import Login from './Features/login.jsx';
+import Login from './components/login.jsx';
+import Chatbot from './components/Chatbot.jsx';
 
 function App() {
   return (
@@ -9,9 +10,9 @@ function App() {
       <Routes>
         {/* Route for the homepage */}
         <Route path="/" element={<KrishiSahayak />} />
-
-        {/* Route for the login page */}
         <Route path="/login" element={<Login />} />
+
+          <Route path="/chatbot" element={<Chatbot />} />
       </Routes>
     </BrowserRouter>
   );
