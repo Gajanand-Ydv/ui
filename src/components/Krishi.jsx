@@ -1,24 +1,67 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import feather from 'feather-icons';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './Krishi.css';
+import '../Features/Theme.css'
+import logoImage from '../assets/logo.png';
+import { useClerk, UserButton, useUser } from '@clerk/clerk-react';
+import ThemeButton from '../Features/themeButton.jsx';
+
+
+const initialSchemes = [
+    { logoIcon: 'award', tag: 'PM-KISAN', title: 'Income Support Scheme', description: '₹6,000 per year in three equal installments to all landholding farmer families.' },
+    { logoIcon: 'droplet', tag: 'PMKSY', title: 'Irrigation Scheme', description: 'Harnessing water resources efficiently to expand cultivable area under irrigation.' },
+    { logoIcon: 'shield', tag: 'PMFBY', title: 'Crop Insurance', description: 'Comprehensive risk insurance against natural calamities for food crops.' },
+    { logoIcon: 'truck', tag: 'e-NAM', title: 'National Agricultural Market', description: 'Online trading platform for agricultural commodities to ensure better prices.' },
+];
 
 const KrishiSahayak = () => {
+
+     const {openSignIn} = useClerk();
+
     const schemesCarouselRef = useRef(null);
+    const [schemes, setSchemes] = useState(initialSchemes);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [theme, setTheme] = useState(() => {
+        const savedTheme = localStorage.getItem('theme');
+        const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return savedTheme || (userPrefersDark ? 'dark' : 'light');
+    });
 
     useEffect(() => {
-        // Initialize AOS animations
+        document.body.className = theme;
+        localStorage.setItem('theme', theme);
+    }, [theme]);
+
+    const toggleTheme = () => {
+        setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+    };
+
+
+    // --- FUNCTION TO LOAD MORE SCHEMES ---
+    const loadMoreSchemes = () => {
+        if (isLoading) return; // Prevent multiple loads at once
+        setIsLoading(true);
+
+        // Simulate a network request delay
+        setTimeout(() => {
+            setSchemes(prevSchemes => [...prevSchemes, ...initialSchemes]);
+            setIsLoading(false);
+        }, 500); // 0.5 second delay
+    };
+
+    useEffect(() => {
         AOS.init({
             duration: 800,
             easing: 'ease-in-out',
             once: true
         });
 
-        // Initialize feather icons
         feather.replace();
 
-        // Simple carousel functionality
         const carousel = schemesCarouselRef.current;
         if (carousel) {
             let isDown = false;
@@ -48,6 +91,13 @@ const KrishiSahayak = () => {
                 const x = e.pageX - carousel.offsetLeft;
                 const walk = (x - startX) * 2;
                 carousel.scrollLeft = scrollLeft - walk;
+
+                // --- INFINITE SCROLL CHECK ---
+                // Check if scrolled near the end (e.g., within 100px)
+                const { scrollLeft: currentScrollLeft, clientWidth, scrollWidth } = carousel;
+                if (!isLoading && currentScrollLeft + clientWidth >= scrollWidth - 100) {
+                    loadMoreSchemes();
+                }
             };
 
             carousel.addEventListener('mousedown', handleMouseDown);
@@ -62,7 +112,8 @@ const KrishiSahayak = () => {
                 carousel.removeEventListener('mousemove', handleMouseMove);
             };
         }
-    }, []);
+        // Add dependencies to the useEffect dependency array
+    }, [isLoading]); // Rerun effect if isLoading changes to re-evaluate listeners if needed
 
     const services = [
         { icon: 'cpu', title: 'AI Crop Prediction', description: 'Get accurate crop yield predictions using our advanced AI models tailored to your farm\'s conditions.' },
@@ -73,13 +124,6 @@ const KrishiSahayak = () => {
         { icon: 'file-text', title: 'Government Schemes Info', description: 'Stay updated with all agricultural schemes and subsidies you\'re eligible for.' },
     ];
 
-    const schemes = [
-        { logoIcon: 'award', tag: 'PM-KISAN', title: 'Income Support Scheme', description: '₹6,000 per year in three equal installments to all landholding farmer families.' },
-        { logoIcon: 'droplet', tag: 'PMKSY', title: 'Irrigation Scheme', description: 'Harnessing water resources efficiently to expand cultivable area under irrigation.' },
-        { logoIcon: 'shield', tag: 'PMFBY', title: 'Crop Insurance', description: 'Comprehensive risk insurance against natural calamities for food crops.' },
-        { logoIcon: 'truck', tag: 'e-NAM', title: 'National Agricultural Market', description: 'Online trading platform for agricultural commodities to ensure better prices.' },
-    ];
-
     const steps = [
         { step: 1, icon: 'bar-chart-2', title: 'Yield Optimization', description: 'Our AI analyzes soil, weather, and crop data to recommend optimal planting strategies.' },
         { step: 2, icon: 'alert-triangle', title: 'Risk Management', description: 'Get early warnings for pests, diseases, and adverse weather to protect your crops.' },
@@ -87,20 +131,21 @@ const KrishiSahayak = () => {
     ];
 
     return (
-        <div className="krishi-sahisahayak">
-            {/* Navigation */}
+        <div className="krishi Sahayak">
             <nav className="navigation">
                 <div className="container navigation-container">
                     <div className="nav-logo">
-                        <i data-feather="sun" className="icon-sun"></i>
-                        <span className="logo-text">Krishi Sahayak</span>
+                       <img className="logo" src={logoImage} alt="Krishi Sahayak logo" />
+                       <span className="logo-text">Krishi Sahayak</span>
                     </div>
                     <div className="nav-links">
                         <a href="#" className="nav-item">AI Crop Advisor</a>
                         <a href="#" className="nav-item">Product Insights</a>
-                        <a href="#" className="nav-item">Farm Finance</a>
+                        <a href="#" className="nav-item">Farm</a>
                         <a href="#" className="nav-item">Farm Schemes</a>
-                        <button className="btn-login">Login</button>
+                        <ThemeButton theme={theme} toggleTheme={toggleTheme}/>
+                        <Link to="/login" className="btn-login">Login</Link>
+                        <button onClick={ e => openSignIn()} className="btn-login">Register</button>
                     </div>
                     <div className="mobile-menu-btn">
                         <button type="button">
@@ -123,7 +168,7 @@ const KrishiSahayak = () => {
             </div>
 
             {/* Services Section */}
-            <div className="section services-section">
+            <div className="services-section">
                 <h2 className="section-title" data-aos="fade-up">Our Services</h2>
                 <div className="services-grid">
                     {services.map((service, index) => (
@@ -144,8 +189,10 @@ const KrishiSahayak = () => {
                     <h2 className="section-title" data-aos="fade-up">Government Schemes & Insights</h2>
                     <div className="carousel-wrapper">
                         <div className="carousel" ref={schemesCarouselRef}>
+                            {/* --- MAPPING OVER THE SCHEMES STATE VARIABLE --- */}
                             {schemes.map((scheme, index) => (
-                                <div key={index} className="scheme-card" data-aos="fade-right" data-aos-delay={index * 100}>
+                                // --- UPDATED UNIQUE KEY ---
+                                <div  className="scheme-card" data-aos="fade-right" data-aos-delay={index * 100}>
                                     <div className="scheme-header">
                                         <div className="scheme-icon-wrapper">
                                             <i data-feather={scheme.logoIcon} className="scheme-icon"></i>
@@ -159,6 +206,13 @@ const KrishiSahayak = () => {
                                     </button>
                                 </div>
                             ))}
+
+                            {/* --- LOADING INDICATOR --- */}
+                            {isLoading && (
+                                <div className="scheme-card loading-indicator">
+                                    <p>Loading More Schemes...</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -189,8 +243,7 @@ const KrishiSahayak = () => {
                     <h2 className="cta-title" data-aos="fade-up">Ready to Transform Your Farming?</h2>
                     <p className="cta-subtitle" data-aos="fade-up" data-aos-delay="100">Join thousands of farmers who are already benefiting from our AI-powered agriculture platform.</p>
                     <div className="cta-buttons" data-aos="fade-up" data-aos-delay="200">
-                        <button className="btn btn-cta-white">Sign Up Free</button>
-                        <button className="btn btn-cta-transparent">Request Demo</button>
+                        <button onClick={ e => openSignIn()} className="btn btn-cta-white">Sign Up Free</button>
                     </div>
                 </div>
             </div>
@@ -200,8 +253,8 @@ const KrishiSahayak = () => {
                 <div className="container footer-content">
                     <div className="footer-column">
                         <div className="footer-logo">
-                            <i data-feather="sun" className="icon-sun"></i>
-                            <span className="logo-text">Krishi SahiSahayak</span>
+                             <img className="logo logo-footer" src={logoImage} alt="Krishi Sahayak logo" />
+                            <span className="logo-text-footer logo-text">Krishi Sahayak</span>
                         </div>
                         <p className="footer-description">Empowering farmers with AI-driven agricultural insights for sustainable and profitable farming.</p>
                     </div>
