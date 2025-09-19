@@ -5,10 +5,15 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import './Krishi.css';
 import '../Features/Theme.css'
+import { useNavigate } from 'react-router-dom';
+
 import logoImage from '../assets/logo.png';
-import { useClerk, UserButton, useUser } from '@clerk/clerk-react';
+import { useClerk } from '@clerk/clerk-react';
 import ThemeButton from '../Features/themeButton.jsx';
 import ChatbotButton from '../Features/ChatbotButton'; // Your import is correct
+import "./Chatbot.css"
+import { NavBar } from '../Features/NavBar.jsx';
+import { Footer } from '../Features/Footer.jsx';
 
 
 const initialSchemes = [
@@ -21,6 +26,7 @@ const initialSchemes = [
 const KrishiSahayak = () => {
 
      const {openSignIn} = useClerk();
+     const navigate = useNavigate();
 
     const schemesCarouselRef = useRef(null);
     const [schemes, setSchemes] = useState(initialSchemes);
@@ -94,7 +100,6 @@ const KrishiSahayak = () => {
                 carousel.scrollLeft = scrollLeft - walk;
 
                 // --- INFINITE SCROLL CHECK ---
-                // Check if scrolled near the end (e.g., within 100px)
                 const { scrollLeft: currentScrollLeft, clientWidth, scrollWidth } = carousel;
                 if (!isLoading && currentScrollLeft + clientWidth >= scrollWidth - 100) {
                     loadMoreSchemes();
@@ -115,13 +120,11 @@ const KrishiSahayak = () => {
         }
     }, [isLoading]); 
 
+    // ✅ updated services with route instead of inline Navigate
     const services = [
-        { icon: 'cpu', title: 'AI Crop Prediction', description: 'Get accurate crop yield predictions using our advanced AI models tailored to your farm\'s conditions.' },
-        { icon: 'trending-up', title: 'Market Analysis', description: 'Real-time market prices and trends to help you make informed selling decisions.' },
-        { icon: 'shield', title: 'Pest & Disease Diagnosis', description: 'Upload photos of affected crops and get instant diagnosis with treatment recommendations.' },
-        { icon: 'cloud', title: 'Weather Alerts', description: 'Hyper-local weather forecasts and alerts to protect your crops from adverse conditions.' },
-        { icon: 'dollar-sign', title: 'Farm Expense Tracker', description: 'Monitor all farm expenses and income in one place with insightful analytics.' },
-        { icon: 'file-text', title: 'Government Schemes Info', description: 'Stay updated with all agricultural schemes and subsidies you\'re eligible for.' },
+        { icon: 'cpu', title: 'AI Crop Prediction', description: 'Get accurate crop yield predictions using our advanced AI models tailored to your farm\'s conditions.', path: '/AiCropPredict' },
+        { icon: 'shield', title: 'Pest & Disease Diagnosis', description: 'Upload photos of affected crops and get instant diagnosis with treatment recommendations.', path: '/AiPestdisease' },
+        { icon: 'cloud', title: 'Weather Alerts', description: 'Hyper-local weather forecasts and alerts to protect your crops from adverse conditions.', path: '/WeatherAlerts' },
     ];
 
     const steps = [
@@ -132,28 +135,8 @@ const KrishiSahayak = () => {
 
     return (
         <div className="krishi Sahayak">
-            <nav className="navigation">
-                <div className="container navigation-container">
-                    <div className="nav-logo">
-                       <img className="logo" src={logoImage} alt="Krishi Sahayak logo" />
-                       <span className="logo-text">Krishi Sahayak</span>
-                    </div>
-                    <div className="nav-links">
-                        <a href="#" className="nav-item">AI Crop Advisor</a>
-                        <a href="#" className="nav-item">Product Insights</a>
-                        <a href="#" className="nav-item">Farm</a>
-                        <a href="#" className="nav-item">Farm Schemes</a>
-                        <ThemeButton theme={theme} toggleTheme={toggleTheme}/>
-                        <Link to="/login" className="btn-login">Login</Link>
-                        <button onClick={ e => openSignIn()} className="btn-login">Register</button>
-                    </div>
-                    <div className="mobile-menu-btn">
-                        <button type="button">
-                            <i data-feather="menu" className="icon-menu"></i>
-                        </button>
-                    </div>
-                </div>
-            </nav>
+            <NavBar />
+
 
             {/* Hero Section */}
             <div className="hero">
@@ -172,7 +155,14 @@ const KrishiSahayak = () => {
                 <h2 className="section-title" data-aos="fade-up">Our Services</h2>
                 <div className="services-grid">
                     {services.map((service, index) => (
-                        <div key={index} className="card service-card" data-aos="fade-up" data-aos-delay={100 + index * 50}>
+                        <div 
+                            key={index} 
+                            className="card service-card" 
+                            data-aos="fade-up" 
+                            data-aos-delay={100 + index * 50}
+                            onClick={() => navigate(service.path)} // ✅ makes whole card clickable
+                            style={{cursor: "pointer"}}
+                        >
                             <div className="card-icon-wrapper">
                                 <i data-feather={service.icon} className="card-icon"></i>
                             </div>
@@ -184,6 +174,8 @@ const KrishiSahayak = () => {
             </div>
 
             {/* Government Schemes Carousel */}
+            {/* (unchanged code below) */}
+            
             <div className="section schemes-section">
                 <div className="container">
                     <h2 className="section-title" data-aos="fade-up">Government Schemes & Insights</h2>
@@ -244,53 +236,6 @@ const KrishiSahayak = () => {
                 </div>
             </div>
 
-            {/* Footer */}
-            <footer className="footer">
-                <div className="container footer-content">
-                    <div className="footer-column">
-                        <div className="footer-logo">
-                             <img className="logo logo-footer" src={logoImage} alt="Krishi Sahayak logo" />
-                            <span className="logo-text-footer logo-text">Krishi Sahayak</span>
-                        </div>
-                        <p className="footer-description">Empowering farmers with AI-driven agricultural insights for sustainable and profitable farming.</p>
-                    </div>
-                    <div className="footer-column">
-                        <h3 className="footer-heading">Quick Links</h3>
-                        <ul className="footer-links">
-                            <li><a href="#" className="footer-link">Home</a></li>
-                            <li><a href="#" className="footer-link">Features</a></li>
-                            <li><a href="#" className="footer-link">Pricing</a></li>
-                            <li><a href="#" className="footer-link">About Us</a></li>
-                        </ul>
-                    </div>
-                    <div className="footer-column">
-                        <h3 className="footer-heading">Resources</h3>
-                        <ul className="footer-links">
-                            <li><a href="#" className="footer-link">Blog</a></li>
-                            <li><a href="#" className="footer-link">Help Center</a></li>
-                            <li><a href="#" className="footer-link">Tutorials</a></li>
-                            <li><a href="#" className="footer-link">FAQs</a></li>
-                        </ul>
-                    </div>
-                    <div className="footer-column">
-                        <h3 className="footer-heading">Contact Us</h3>
-                        <ul className="footer-contact">
-                            <li><i data-feather="mail" className="contact-icon"></i> support@krishisahayak.com</li>
-                            <li><i data-feather="phone" className="contact-icon"></i> +91 9876543210</li>
-                            <li><i data-feather="map-pin" className="contact-icon"></i> Bangalore, India</li>
-                        </ul>
-                    </div>
-                </div>
-                <div className="footer-bottom">
-                    <p className="copyright">© 2023 Krishi Sahayak. All rights reserved.</p>
-                    <div className="social-links">
-                        <a href="#" className="social-link"><i data-feather="facebook" className="social-icon"></i></a>
-                        <a href="#" className="social-link"><i data-feather="twitter" className="social-icon"></i></a>
-                        <a href="#" className="social-link"><i data-feather="instagram" className="social-icon"></i></a>
-                        <a href="#" className="social-link"><i data-feather="linkedin" className="social-icon"></i></a>
-                    </div>
-                </div>
-            </footer>
             
             {/* --- CHATBOT BUTTON ADDED HERE --- */}
             <ChatbotButton />
