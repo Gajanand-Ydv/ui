@@ -4,7 +4,7 @@ import feather from 'feather-icons';
 import './ChatbotButton.css';
 
 const ChatbotButton = () => {
-  // Initialize feather icons
+
   useEffect(() => {
     feather.replace();
   }, []);

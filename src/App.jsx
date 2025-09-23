@@ -9,21 +9,20 @@ import WeatherAlerts from './components/WeatherAlerts.jsx';
 
 function App() {
   return (
-    <BrowserRouter>
+    <div>
       <Routes>
         {/* Route for the homepage */}
         <Route path="/" element={<KrishiSahayak />} />
         <Route path="/login" element={<Login />} />
         <Route path="/chatbot" element={<Chatbot />} />
         <Route path="/AiCropPredict" element={<AiCropPredict />} />
-        <Route path="/AiPestdisease" element={<AiPestdisease />} />
         <Route path="/WeatherAlerts" element={<WeatherAlerts />} />
      
         
 
 
       </Routes>
-    </BrowserRouter>
+    </div>
   );
 }
 

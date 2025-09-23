@@ -1,45 +1,75 @@
+.container navigation-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 60px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid #ddd;
+  z-index: 2000;
+}
+.chatbot-wrapper {
+  height: calc(100vh-60px);
+  display: flex;
+  flex-direction: column;
+  margin-top: 60px;
+}
 .chatbot-page {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  width:100vw;
+  width: 100vw;
   background-color: var(--background-secondary);
   color: var(--text-primary);
 }
 
 .chatbot-header {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 100vw;
+  justify-content: center;
+  flex-shrink: 0;
+  text-align: center;
+  font-weight: bold;
   display: flex;
   align-items: center;
   padding: 1rem 1.5rem;
   background-color: var(--card-background);
   border-bottom: 1px solid var(--border-color);
   box-shadow: 0 2px 4px var(--shadow-color);
+  z-index: 1000;
 }
 
 .chatbot-header h1 {
+  margin: 0;
   font-size: 1.25rem;
-  margin: 0 auto; /* Center the title */
 }
 
 .back-button {
+  position: absolute;
+  left: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   color: var(--text-primary);
   text-decoration: none;
   font-weight: 500;
-  position: absolute;
 }
-
 .chat-messages {
-  flex-grow: 1;
+  flex: 1;
   overflow-y: auto;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-top: 70px;
+  overflow: hidden;
 }
-
 .message-bubble {
   max-width: 70%;
   padding: 0.75rem 1rem;
@@ -62,6 +92,7 @@
 }
 
 .chat-input-form {
+  flex-shrink: 0;
   padding: 1rem 1.5rem;
   background-color: var(--card-background);
   border-top: 1px solid var(--border-color);
@@ -104,5 +135,13 @@
 }
 
 .chat-input-form button:hover {
-  background-color: var(--primary-color-dark);
+  background-color: rgb(135, 135, 236);
+}
+
+.chat-input-form button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: green;
+  padding: 8px;
 }
