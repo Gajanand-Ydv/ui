@@ -16,8 +16,6 @@ import { NavBar } from "../Features/NavBar.jsx";
 import { Footer } from "../Features/Footer.jsx";
 import AiCropPredict from "./AiCropPredict.jsx";
 import "./AiCropPredict.css";
-import AiPestdisease from "./AiPestdisease.jsx";
-import "./AiPestdisease.css";
 import WeatherAlerts from "./WeatherAlerts.jsx";
 import "./WeatherAlerts.css";
 const initialSchemes = [
@@ -239,9 +237,8 @@ const KrishiSahayak = () => {
       </div>
 
       {/* Government Schemes Carousel */}
-      {/* (unchanged code below) */}
-
-      
+   
+     
 
       {/* How It Works Section */}
       <div className="section how-it-works-section">

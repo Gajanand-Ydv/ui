@@ -244,11 +244,10 @@ body {
   }
 }
 
-@media (min-width: 1024px) {
-  .services-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+/* UPDATED: The media query for 1024px was removed from here.
+  The rule above for 768px will now apply to all wider screens, 
+  keeping the grid at 2 columns (half width).
+*/
 
 .card {
   background: var(--card-background);
@@ -712,7 +711,7 @@ body {
   color: var(--text-primary);
 }
 
-.social-icon {
+/* .social-icon {
   height: 1.25rem;
   width: 1.25rem;
-}
+} */
